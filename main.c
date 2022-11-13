@@ -3,11 +3,12 @@
 
 #define EXT "module"
 #define WORDWIDTH 8
-#define MAXPORTS 8
+#define MAXPORTS 32 
 
 struct port {
     char name[WORDWIDTH];
     int value;
+    char type; // i, o, l
 };
 
 // returns str ptr to filename extension
@@ -36,12 +37,8 @@ int Simulate(char *entryFile) {
         return 1;
     }
 
-    struct port inputs[MAXPORTS];
-    struct port outputs[MAXPORTS];
-    struct port logics[MAXPORTS];
-    int inputCount = 0;
-    int outputCount = 0;
-    int logicCount = 0;
+    struct port ports[MAXPORTS];
+    int portCount = 0;
 
     // get word
     while (fscanf(fp, "%s", buff) != EOF) {
@@ -50,23 +47,26 @@ int Simulate(char *entryFile) {
         if (!strcmp(buff, "input")) {
             struct port p;
             fscanf(fp, "%s", p.name);
-            fscanf(fp, "%d", &p.value);
-            inputs[inputCount] = p;
-            inputCount++;
+            fscanf(fp, "%d", &p.value); // scan in val for now
+            p.type = 'i';
+            ports[portCount] = p;
+            portCount++;
         }
         // output
         else if (!strcmp(buff, "output")) {
             struct port p;
             fscanf(fp, "%s", p.name);
             p.value = 0;
-            outputs[outputCount] = p;
-            outputCount++;
+            p.type ='o';
+            ports[portCount] = p;
+            portCount++;
         }
-        // output
+        // logic
         else if (!strcmp(buff, "logic")) {
             struct port p;
             fscanf(fp, "%s", p.name);
             p.value = 0;
+            p.type = 'l';
             // check for init
             FILE* fpNext = fp;
             fscanf(fpNext, "%s", buff);
@@ -74,8 +74,8 @@ int Simulate(char *entryFile) {
                 fscanf(fpNext, "$d", &p.value);
                 fp = fpNext;
             }
-            logics[logicCount] = p;
-            logicCount++;
+            ports[portCount] = p;
+            portCount++;
         }
         // functionality
         else if (!strcmp(buff, "nand")) {
@@ -83,14 +83,15 @@ int Simulate(char *entryFile) {
             struct port *in1;
             fscanf(fp, "%s", buff);
             int found = 0;
-            for (int i=0; i<inputCount; i++) {
-                if (!strcmp(inputs[i].name, buff)) {
-                    in1 = &inputs[i];
+            for (int i=0; i<portCount; i++) {
+                if (ports[i].type == 'o') continue;
+                if (!strcmp(ports[i].name, buff)) {
+                    in1 = &ports[i];
                     found = 1;
                 }
             }
             if (!found) {
-                printf("Error: no such input '%s'\n", buff);
+                printf("Error: no such port '%s'\n", buff);
                 return 1;
             }
 
@@ -98,14 +99,15 @@ int Simulate(char *entryFile) {
             struct port *in2;
             fscanf(fp, "%s", buff);
             found = 0;
-            for (int i=0; i<inputCount; i++) {
-                if (!strcmp(inputs[i].name, buff)) {
-                    in2 = &inputs[i];
+            for (int i=0; i<portCount; i++) {
+                if (ports[i].type == 'o') continue;
+                if (!strcmp(ports[i].name, buff)) {
+                    in2 = &ports[i];
                     found = 1;
                 }
             }
             if (!found) {
-                printf("Error: no such input '%s'\n", buff);
+                printf("Error: no such port '%s'\n", buff);
                 return 1;
             }
 
@@ -113,14 +115,15 @@ int Simulate(char *entryFile) {
             struct port *out;
             fscanf(fp, "%s", buff);
             found = 0;
-            for (int i=0; i<outputCount; i++) {
-                if (!strcmp(outputs[i].name, buff)) {
-                    out = &outputs[i];
+            for (int i=0; i<portCount; i++) {
+                if (ports[i].type == 'i') continue;
+                if (!strcmp(ports[i].name, buff)) {
+                    out = &ports[i];
                     found = 1;
                 }
             }
             if (!found) {
-                printf("Error: no such output '%s'\n", buff);
+                printf("Error: no such port '%s'\n", buff);
                 return 1;
             }
 
