@@ -1,5 +1,4 @@
-*.exe
-modules/*
-Makefile
+build/
+modules/
 *.swp
 

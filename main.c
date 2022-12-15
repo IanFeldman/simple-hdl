@@ -71,12 +71,13 @@ int Simulate(char *entryFile) {
             FILE* fpNext = fp;
             fscanf(fpNext, "%s", buff);
             if (!strcmp(buff, "=")) {
-                fscanf(fpNext, "$d", &p.value);
+                fscanf(fpNext, "%d", &p.value);
                 fp = fpNext;
             }
             ports[portCount] = p;
             portCount++;
         }
+
         // functionality
         else if (!strcmp(buff, "nand")) {
             // find input 1
@@ -127,9 +128,14 @@ int Simulate(char *entryFile) {
                 return 1;
             }
 
-            in2->value = Nand(in1->value, in2->value);
-            printf("%d\n", in2->value);
+            out->value = Nand(in1->value, in2->value);
+            // printf("%d\n", out->value);
         }
+    }
+
+    // print ports
+    for (int i=0; i<portCount; i++) {
+        printf("%s(%c): %d\n", ports[i].name, ports[i].type, ports[i].value);
     }
 
     return 0;
