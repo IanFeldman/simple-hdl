@@ -1,3 +1,2 @@
 output:
-	gcc main.c -o build/main
-
+	g++ *.cpp -o build/simple-hdl 

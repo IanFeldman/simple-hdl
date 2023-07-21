@@ -1,4 +1,4 @@
-build/
-modules/
-*.swp
-
+modules
+.vscode
+notes.txt
+build
