@@ -42,7 +42,7 @@ void Module::evaluate() {
                 super_value = m_logics[supermodule_parameter];
             }
             else {
-                std::cerr << "Error: supermodule parameter is neither an input or logic" << std::endl;
+                std::cout << "Error: supermodule parameter is neither an input or logic" << std::endl;
                 return;
             }
             // set submodule input value
@@ -66,7 +66,7 @@ void Module::evaluate() {
                 m_logics[supermodule_parameter] = (*submodule_outputs)[submodule_output];
             }
             else {
-                std::cerr << "Error: supermodule parameter is neither an output or logic" << std::endl;
+                std::cout << "Error: supermodule parameter is neither an output or logic" << std::endl;
                 return;
             }
         }

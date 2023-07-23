@@ -14,12 +14,21 @@
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
+    m_running = true;
+    m_clock = 0;
 }
 
 void Simulation::initialize() {
     Module *top_module = parseFile(createFilePath(ENTRY), "top");
-    top_module->evaluate();
-    debug();
+    if (top_module) {
+        /*
+        while (m_running) {
+            top_module->evaluate();
+        }
+        */
+        top_module->evaluate();
+        debug();
+    }
     shutdown();
 }
 
@@ -33,8 +42,9 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
  
     // error occurred while opening the file.
     if (!file.is_open()) {
-        std::cerr << "Error opening file: " << t_file_name << std::endl;
-        exit(EXIT_FAILURE);
+        std::cout << "(" << t_file_name << ") ";
+        std::cerr << "Error opening file" << std::endl;
+        return nullptr;
     }
 
     // create module
@@ -47,7 +57,12 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
         if (word == COMMENT) {
             file >> word;
             while (word != COMMENT) {
-                file >> word;
+                if (!(file >> word)) {
+                    std::cout << "(" << t_file_name << ") ";
+                    std::cout << "Error: missing end of comment" << std::endl;
+                    file.close();
+                    return nullptr;
+                }
             }
         }
         else if (word == INPUT) {
@@ -64,9 +79,19 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             std::string logic_name, logic_value;
             file >> logic_name;
             file >> logic_value;
-            int value = 0;
-            if (logic_value != "0") {
+            // check value
+            int value;
+            if (logic_value == "0") {
+                value = 0;
+            }
+            else if (logic_value == "1") {
                 value = 1;
+            }
+            else {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: Logic assignment must be 0 or 1" << std::endl;
+                file.close();
+                return nullptr;
             }
             module->addLogic(logic_name, value);
         }
@@ -75,7 +100,20 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             // create new module
             file >> module_name;
             file >> module_filename;
-            Module *new_module = parseFile(createFilePath(module_filename), module_name);
+            std::string file_path = createFilePath(module_filename);
+            // check for cyclical module
+            if (file_path == t_file_name) {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: Cannot instantiate module inside itself" << std::endl;
+                file.close();
+                return nullptr;
+            }
+            Module *new_module = parseFile(file_path, module_name);
+            // check if module was created correctly
+            if (!new_module) {
+                file.close();
+                return nullptr;
+            }
             // create connection
             Module::Connection connection;
             connection.module = new_module;
@@ -83,7 +121,12 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             std::unordered_map<std::string, std::string> port_map;
             file >> port_name;
             while (port_name != ENDMODULE) {
-                file >> port_value;
+                if (!(file >> port_value)) {
+                    std::cout << "(" << t_file_name << ") ";
+                    std::cout << "Error: missing end of module" << std::endl;
+                    file.close();
+                    return nullptr;
+                }
                 port_map[port_name] = port_value; 
                 file >> port_name;
             }
@@ -105,6 +148,12 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             connection.port_map = port_map;
             // add connection
             module->addConnection(connection);
+        }
+        else {
+            std::cout << "(" << t_file_name << ") ";
+            std::cerr << "Error: Invalid token '" << word << "'" << std::endl;
+            file.close();
+            return nullptr;
         }
     }
 

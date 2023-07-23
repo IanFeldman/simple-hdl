@@ -16,4 +16,6 @@ public:
 private:
     std::string m_directory;
     std::vector<Module*> m_modules;
+    bool m_running;
+    int m_clock;
 };
