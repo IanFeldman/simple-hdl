@@ -1,4 +1,5 @@
 #include "simulation.hpp"
+#include "nand.hpp"
 
 // syntax
 #define ENTRY "top"
@@ -8,6 +9,7 @@
 #define LOGIC "logic"
 #define MODULE "module"
 #define ENDMODULE "endmodule"
+#define NAND "nand"
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
@@ -79,12 +81,27 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
                 file >> port_name;
             }
             connection.port_map = port_map;
+            // add connection
+            module->addConnection(connection);
+        }
+        else if (word == NAND) {
+            Nand *nand = new Nand();
+            addModule(nand);
+            // create connection
+            Module::Connection connection;
+            connection.module = nand;
+            // create map
+            std::unordered_map<std::string, std::string> port_map;
+            file >> port_map["A"]; 
+            file >> port_map["B"];
+            file >> port_map["Z"];
+            connection.port_map = port_map;
+            // add connection
             module->addConnection(connection);
         }
     }
 
     file.close();
-
     return module;
 }
 
