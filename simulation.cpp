@@ -14,12 +14,13 @@ Simulation::Simulation(std::string t_directory) {
 }
 
 void Simulation::initialize() {
-    parseFile(createFilePath(ENTRY), "top");
+    Module *top_module = parseFile(createFilePath(ENTRY), "top");
+    top_module->evaluate();
     debug();
     shutdown();
 }
 
-Module* Simulation::parseFile(std::string t_file_name, std::string t_module_name) {
+Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name) {
     // filestream variable file
     std::fstream file;
     std::string word, t, q;
@@ -96,18 +97,18 @@ void Simulation::debug() {
         std::cout << m->getName() << "(" << m->getFileName() << ")" << std::endl;
 
         std::cout << "  INPUTS" << std::endl;
-        for (auto& it: m->getInputs()) {
-            std::cout << "    " << it.first << " : " << m->getInputs()[it.first] << std::endl;
+        for (auto& it: *m->getInputs()) {
+            std::cout << "    " << it.first << " : " << (*m->getInputs())[it.first] << std::endl;
         }
 
         std::cout << "  OUTPUTS" << std::endl;
-        for (auto& it: m->getOutputs()) {
-            std::cout << "    " << it.first << " : " << m->getOutputs()[it.first] << std::endl;
+        for (auto& it: *m->getOutputs()) {
+            std::cout << "    " << it.first << " : " << (*m->getOutputs())[it.first] << std::endl;
         }
 
         std::cout << "  LOGICS" << std::endl;
-        for (auto& it: m->getLogics()) {
-            std::cout << "    " << it.first << " : " << m->getLogics()[it.first] << std::endl;
+        for (auto& it: *m->getLogics()) {
+            std::cout << "    " << it.first << " : " << (*m->getLogics())[it.first] << std::endl;
         }
 
         std::cout << "  CONNECTIONS" << std::endl;
