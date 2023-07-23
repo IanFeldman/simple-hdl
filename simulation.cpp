@@ -10,6 +10,7 @@
 #define MODULE "module"
 #define ENDMODULE "endmodule"
 #define NAND "nand"
+#define COMMENT "#"
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
@@ -25,7 +26,7 @@ void Simulation::initialize() {
 Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name) {
     // filestream variable file
     std::fstream file;
-    std::string word, t, q;
+    std::string word;
 
     // opening file
     file.open(t_file_name.c_str());
@@ -43,7 +44,13 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
     // extracting words from the file
     while (file >> word)
     {
-        if (word == INPUT) {
+        if (word == COMMENT) {
+            file >> word;
+            while (word != COMMENT) {
+                file >> word;
+            }
+        }
+        else if (word == INPUT) {
             std::string input_name;
             file >> input_name;
             module->addInput(input_name);
