@@ -4,6 +4,7 @@
 // syntax
 #define ENTRY "top"
 #define EXT ".module"
+#define KEY "KEY_"
 #define INPUT "input"
 #define OUTPUT "output" 
 #define LOGIC "logic"
@@ -19,14 +20,25 @@ Simulation::Simulation(std::string t_directory) {
 }
 
 void Simulation::initialize() {
+    // init video and events
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        std::cout << "Error initializing SDL video: " << SDL_GetError() << std::endl;
+        return;
+    }
+    // create window
+    m_window = SDL_CreateWindow("Simple HDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 300, SDL_WINDOW_RESIZABLE);
+    if (m_window == nullptr) {
+        std::cout << "Error creating window: " << SDL_GetError() << std::endl;
+        return;
+    }
+    std::cout<< "SDL initialized" <<std::endl;
+
+    // parse modules
     Module *top_module = parseFile(createFilePath(ENTRY), "top");
     if (top_module) {
-        /*
-        while (m_running) {
-            top_module->evaluate();
-        }
-        */
-        top_module->evaluate();
+        // begin loop
+        update(top_module);
+        // debug at the end
         debug();
     }
     shutdown();
@@ -197,8 +209,46 @@ void Simulation::debug() {
     }
 }
 
+void Simulation::update(Module *t_top_module) {
+    while (m_running) {
+        // get input 
+        SDL_Event event;
+        while(SDL_PollEvent(&event)) {
+            switch(event.type){
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym) {
+                        case SDLK_a:
+                            std::cout << "key pressed" << std::endl;
+                            break;
+                        case SDLK_ESCAPE:
+                            m_running = false;
+                            return;
+                        default:
+                            break;
+                    }
+                    break;
+                case SDL_QUIT:
+                    m_running = false;
+                    return;
+                default:
+                    break;
+            }
+        }
+
+        // update clock
+        if (m_clock) { m_clock = 0; }
+        else { m_clock = 1; }
+
+        // update module values
+        t_top_module->evaluate();
+    }
+}
+
 void Simulation::shutdown() {
     for (Module *m : m_modules) {
         delete m;
     }
+
+    SDL_DestroyWindow(m_window);
+    SDL_Quit();
 }
