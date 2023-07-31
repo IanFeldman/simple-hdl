@@ -1,5 +1,6 @@
 #pragma once
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -30,7 +31,7 @@ public:
     std::vector<Connection> getConnections() { return m_connections; }
 
     // calculates output value(s)
-    // overridden by nand
+    // overridden by nand, keyboard
     virtual void evaluate();
 
 protected:

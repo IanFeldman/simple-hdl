@@ -4,14 +4,16 @@ usage:
 prog flow:
 - opens 'top.mod'
 - loads all modules and connections
+- loop: updates clock, then keyboard then,
 - evaluates starting from top module, depth first
 
 syntax:
-input [name*]
+input [name]
 output [name]
 logic [name] [value]
 module [name] [filename] [input name] [param] [output name] [param] endmodule
 nand [param] [param] [param]
+keyboard [key] [param]
 # this is a comment #
 
 * KEY_A, KEY_B, KEY_C, ... , KEY_Z map to keyboard keys
@@ -20,11 +22,9 @@ nand [param] [param] [param]
 + check for module ins/logics->ins, outs/logics->outs 
 - cannot repeat names
 + order matters
-- check that all inputs and outputs in module instantiation are satisfied
+- check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)
 + check for end of comment and endmodule
 + check for cyclic module
 
 parameter = input or output or logic
 port = input or output
-
-

@@ -33,7 +33,7 @@ void Module::evaluate() {
             std::string submodule_input = it.first;
             // super input/logic to be fed in
             std::string supermodule_parameter = c.port_map[submodule_input];
-            // check if sup par is input or logic
+            // check if sup par is input, logic, or output
             int super_value;
             if (m_inputs.count(supermodule_parameter)) {
                 super_value = m_inputs[supermodule_parameter];
@@ -41,8 +41,16 @@ void Module::evaluate() {
             else if (m_logics.count(supermodule_parameter)) {
                 super_value = m_logics[supermodule_parameter];
             }
+            else if (m_outputs.count(supermodule_parameter)) {
+                std::cout << "(" << m_file_name << ") ";
+                std::cout << "Error evaluating module '" << c.module->getName() << "': ";
+                std::cout << "cannot connect supermodule output to submodule input" << std::endl;
+                return;
+            }
             else {
-                std::cout << "Error: supermodule parameter is neither an input or logic" << std::endl;
+                std::cout << "(" << m_file_name << ") ";
+                std::cout << "Error evaluating module '" << c.module->getName() << "': ";
+                std::cout << "unconnected submodule input" << std::endl;
                 return;
             }
             // set submodule input value
@@ -58,15 +66,23 @@ void Module::evaluate() {
             std::string submodule_output = it.first;
             // super output/logic to receive sub out
             std::string supermodule_parameter = c.port_map[submodule_output];
-            // check if sup par is output or logic
+            // check if sup par is output, logic, or input
             if (m_outputs.count(supermodule_parameter)) {
                 m_outputs[supermodule_parameter] = (*submodule_outputs)[submodule_output];
             }
             else if (m_logics.count(supermodule_parameter)) {
                 m_logics[supermodule_parameter] = (*submodule_outputs)[submodule_output];
             }
+            else if (m_inputs.count(supermodule_parameter)) {
+                std::cout << "(" << m_file_name << ") ";
+                std::cout << "Error evaluating module '" << c.module->getName() << "': ";
+                std::cout << "cannot connect submodule output to supermodule input" << std::endl;
+                return;
+            }
             else {
-                std::cout << "Error: supermodule parameter is neither an output or logic" << std::endl;
+                std::cout << "(" << m_file_name << ") ";
+                std::cout << "Error evaluating module '" << c.module->getName() << "': ";
+                std::cout << "unconnected submodule output" << std::endl;
                 return;
             }
         }

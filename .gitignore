@@ -2,3 +2,4 @@ modules
 .vscode
 build
 libs
+.DS_Store

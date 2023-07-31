@@ -1,3 +1,4 @@
+#include <fstream>
 #include "simulation.hpp"
 #include "nand.hpp"
 
@@ -12,9 +13,12 @@
 #define ENDMODULE "endmodule"
 #define NAND "nand"
 #define COMMENT "#"
+#define KEYBOARD "keyboard"
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
+    m_keyboard = nullptr;
+    m_created_keyboard = false;
     m_running = true;
     m_clock = 0;
 }
@@ -31,7 +35,7 @@ void Simulation::initialize() {
         std::cout << "Error creating window: " << SDL_GetError() << std::endl;
         return;
     }
-    std::cout<< "SDL initialized" <<std::endl;
+    std::cout << "SDL initialized" << std::endl;
 
     // parse modules
     Module *top_module = parseFile(createFilePath(ENTRY), "top");
@@ -40,6 +44,9 @@ void Simulation::initialize() {
         update(top_module);
         // debug at the end
         debug();
+    }
+    else {
+        std::cout << "Error: Failed to parse top.module" << std::endl;
     }
     shutdown();
 }
@@ -161,9 +168,38 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             // add connection
             module->addConnection(connection);
         }
+        else if (word == KEYBOARD) {
+            // create keyboard if it doesn't exist
+            if (!m_created_keyboard) {
+                m_keyboard = new Keyboard();
+                addModule(m_keyboard);
+                m_created_keyboard = true;
+            }
+            // create connection
+            Module::Connection connection;
+            connection.module = m_keyboard;
+            // create map
+            std::unordered_map<std::string, std::string> port_map;
+            std::string key, connected_port;
+            file >> key;
+            // check if it is a valid key
+            if (Keyboard::valid_keys.find(key) == Keyboard::valid_keys.end()) {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: invalid keyboard key '" << key << "'" << std::endl;
+                file.close();
+                return nullptr;
+            }
+            file >> connected_port;
+            port_map[key] = connected_port; 
+            connection.port_map = port_map;
+            // add connection
+            module->addConnection(connection);
+            // add output to keyboard
+            m_keyboard->addOutput(key);
+        }
         else {
             std::cout << "(" << t_file_name << ") ";
-            std::cerr << "Error: Invalid token '" << word << "'" << std::endl;
+            std::cout << "Error: invalid token '" << word << "'" << std::endl;
             file.close();
             return nullptr;
         }
@@ -211,36 +247,37 @@ void Simulation::debug() {
 
 void Simulation::update(Module *t_top_module) {
     while (m_running) {
-        // get input 
-        SDL_Event event;
-        while(SDL_PollEvent(&event)) {
-            switch(event.type){
-                case SDL_KEYDOWN:
-                    switch(event.key.keysym.sym) {
-                        case SDLK_a:
-                            std::cout << "key pressed" << std::endl;
-                            break;
-                        case SDLK_ESCAPE:
-                            m_running = false;
-                            return;
-                        default:
-                            break;
-                    }
-                    break;
-                case SDL_QUIT:
-                    m_running = false;
-                    return;
-                default:
-                    break;
-            }
-        }
+        // check for quit
+        pollQuit(); 
 
         // update clock
         if (m_clock) { m_clock = 0; }
         else { m_clock = 1; }
-
+        
         // update module values
         t_top_module->evaluate();
+    }
+}
+
+void Simulation::pollQuit() {
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        switch(event.type){
+            case SDL_KEYDOWN:
+                switch(event.key.keysym.sym) {
+                    case SDLK_ESCAPE:
+                        m_running = false;
+                        return;
+                    default:
+                        break;
+                }
+                break;
+            case SDL_QUIT:
+                m_running = false;
+                return;
+            default:
+                break;
+        }
     }
 }
 
