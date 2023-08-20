@@ -1,0 +1,11 @@
+# create variables #
+input and_input_1
+input and_input_2
+logic logic_variable 0
+output and_output
+
+# nand inputs together #
+nand and_input_1 and_input_2 logic_variable
+
+# invert logic_variable and save to output #
+module my_not_module not not_in logic_variable not_out and_output endmodule

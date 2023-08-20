@@ -206,13 +206,13 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             keyboard->addOutput(key);
         }
         else if (word == PRESENT) {
-            std::string x, y, r, g, b, param;
+            std::string param, x, y, r, g, b;
+            file >> param;
             file >> x;
             file >> y;
             file >> r;
             file >> g;
             file >> b;
-            file >> param;
             Presenter *presenter = new Presenter(m_renderer, (char)stoi(x), (char)stoi(y), (char)stoi(r), (char)stoi(g), (char)stoi(b));
             addModule(presenter);
             // create connection

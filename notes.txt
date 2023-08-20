@@ -14,7 +14,7 @@ logic [name] [init value]
 module [name] [filename] [input name] [param] [output name] [param] endmodule
 nand [param] [param] [param]
 keyboard [key] [param]
-present [x] [y] [r] [g] [b] [param]
+present [param] [x] [y] [r] [g] [b]
 clock [param]
 # this is a comment #
 

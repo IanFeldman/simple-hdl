@@ -1,0 +1,13 @@
+logic clk 0
+logic g_key 0
+logic h_key 0
+logic result 0
+keyboard G g_key
+keyboard H h_key
+
+clock clk
+
+module my_and_module and and_input_1 g_key and_input_2 h_key and_output result endmodule
+
+present clk 0 0 255 255 255
+present result 2 0 0 0 255
