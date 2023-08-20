@@ -19,8 +19,6 @@
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
-    m_keyboard = nullptr;
-    m_created_keyboard = false;
     m_running = true;
     m_clock = 0;
 }
@@ -60,6 +58,10 @@ void Simulation::initialize() {
 }
 
 Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name) {
+    Keyboard *keyboard;
+    Module::Connection keyboard_connection; // connection from top to keyboard
+    bool created_keyboard = false;
+
     // filestream variable file
     std::fstream file;
     std::string word;
@@ -76,6 +78,14 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
 
     // create module
     Module *module = new Module(t_module_name, t_file_name);
+    // set is top
+    if (t_module_name == "top") {
+        module->setIsTop(true);
+    }
+    else {
+        module->setIsTop(false);
+    }
+    // add to simluation module list
     addModule(module);
 
     // extracting words from the file
@@ -177,17 +187,21 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             module->addConnection(connection);
         }
         else if (word == KEYBOARD) {
-            // create keyboard if it doesn't exist
-            if (!m_created_keyboard) {
-                m_keyboard = new Keyboard();
-                addModule(m_keyboard);
-                m_created_keyboard = true;
+            if (!module->isTop()) {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: Can only create keyboard in top module" << std::endl;
+                file.close();
+                return nullptr;
             }
-            // create connection
-            Module::Connection connection;
-            connection.module = m_keyboard;
-            // create map
-            std::unordered_map<std::string, std::string> port_map;
+            // create keyboard if it doesn't exist
+            if (!created_keyboard) {
+                // malloc
+                keyboard = new Keyboard();
+                addModule(keyboard);
+                // connection
+                keyboard_connection.module = keyboard;
+                created_keyboard = true;
+            }
             std::string key, connected_port;
             file >> key;
             // check if it is a valid key
@@ -198,12 +212,9 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
                 return nullptr;
             }
             file >> connected_port;
-            port_map[key] = connected_port; 
-            connection.port_map = port_map;
-            // add connection
-            module->addConnection(connection);
+            keyboard_connection.port_map[key] = connected_port; 
             // add output to keyboard
-            m_keyboard->addOutput(key);
+            keyboard->addOutput(key);
         }
         else if (word == PRESENT) {
             std::string x, y, r, g, b, param;
@@ -233,7 +244,13 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
         }
     }
 
+    // only want to add one connection for all keyboard outputs
+    if (created_keyboard) {
+        module->addConnection(keyboard_connection);
+    }
+
     file.close();
+    module->setIsTop(false);
     return module;
 }
 

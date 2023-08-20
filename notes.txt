@@ -18,7 +18,9 @@ present [x] [y] [r] [g] [b] [param]
 # this is a comment #
 
 * A, B, C, D... map to keyboard keys
+* keyboard can only be created in top module and there is only 1 (so that is not sampling keyboard at diff times)
 * max dimensions are 0 to 255
+* CLOCK is built-in logic name
 
 - modules have to be defined after ports/parameters
 + check for module ins/logics->ins, outs/logics->outs 
@@ -27,6 +29,7 @@ present [x] [y] [r] [g] [b] [param]
 - check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)
 + check for end of comment and endmodule
 + check for cyclic module
+- check if parameters have been created
 
 parameter = input or output or logic
 port = input or output

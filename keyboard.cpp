@@ -51,7 +51,7 @@ void Keyboard::evaluate() {
     // iterate over outputs
     for (auto& it : m_outputs) {
         // it.first = "A", "B", "C", etc
-        m_outputs[it.first] = keyboard_state[Keyboard::valid_keys["A"]];
+        m_outputs[it.first] = keyboard_state[Keyboard::valid_keys[it.first]];
     }
 
     // poll for keyboard events

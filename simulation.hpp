@@ -19,17 +19,18 @@ public:
     // shows current values/connections of all modules
     void debug();
 
+    int getClock() { return m_clock; }
+
     // frame update
     void update(Module *t_top_module);
     void shutdown();
+
 
 private:
     // key: key, value: input name
     std::unordered_map<std::string, std::string> m_key_input_map;
     std::string m_directory;
     std::vector<Module*> m_modules;
-    Keyboard *m_keyboard;
-    bool m_created_keyboard;
     bool m_running;
     int m_clock;
     SDL_Window *m_window;
