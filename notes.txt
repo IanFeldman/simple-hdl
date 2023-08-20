@@ -10,17 +10,17 @@ prog flow:
 syntax:
 input [name]
 output [name]
-logic [name] [value]
+logic [name] [init value]
 module [name] [filename] [input name] [param] [output name] [param] endmodule
 nand [param] [param] [param]
 keyboard [key] [param]
 present [x] [y] [r] [g] [b] [param]
+clock [param]
 # this is a comment #
 
 * A, B, C, D... map to keyboard keys
 * keyboard can only be created in top module and there is only 1 (so that is not sampling keyboard at diff times)
 * max dimensions are 0 to 255
-* CLOCK is built-in logic name
 
 - modules have to be defined after ports/parameters
 + check for module ins/logics->ins, outs/logics->outs 

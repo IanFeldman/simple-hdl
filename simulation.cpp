@@ -1,21 +1,9 @@
 #include <fstream>
+#include "clock.hpp"
+#include "definitions.hpp"
 #include "nand.hpp"
 #include "presenter.hpp"
 #include "simulation.hpp"
-
-// syntax
-#define ENTRY "top"
-#define EXT ".module"
-#define KEY "KEY_"
-#define INPUT "input"
-#define OUTPUT "output" 
-#define LOGIC "logic"
-#define MODULE "module"
-#define ENDMODULE "endmodule"
-#define NAND "nand"
-#define COMMENT "#"
-#define KEYBOARD "keyboard"
-#define PRESENT "present"
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
@@ -44,7 +32,7 @@ void Simulation::initialize() {
     std::cout << "SDL initialized" << std::endl;
 
     // parse modules
-    Module *top_module = parseFile(createFilePath(ENTRY), "top");
+    Module *top_module = parseFile(createFilePath(ENTRY), TOP_MOD_NAME);
     if (top_module) {
         // begin loop
         update(top_module);
@@ -79,7 +67,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
     // create module
     Module *module = new Module(t_module_name, t_file_name);
     // set is top
-    if (t_module_name == "top") {
+    if (t_module_name == TOP_MOD_NAME) {
         module->setIsTop(true);
     }
     else {
@@ -236,6 +224,22 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             // add connection
             module->addConnection(connection);
         }
+        else if (word == CLOCK) {
+            std::string param;
+            file >> param;
+            // create clock
+            Clock *clock = new Clock(this);
+            addModule(clock);
+            // create connection
+            Module::Connection connection;
+            connection.module = clock;
+            // create map
+            std::unordered_map<std::string, std::string> port_map;
+            port_map["Z"] = param;
+            connection.port_map = port_map;
+            // add connection
+            module->addConnection(connection);
+        }
         else {
             std::cout << "(" << t_file_name << ") ";
             std::cout << "Error: invalid token '" << word << "'" << std::endl;
@@ -300,14 +304,14 @@ void Simulation::update(Module *t_top_module) {
         // check for quit
         pollQuit(); 
 
-        // clear screen
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
-        SDL_RenderClear(m_renderer);
-
         // update clock
         if (m_clock) { m_clock = 0; }
         else { m_clock = 1; }
         
+        // clear screen
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+        SDL_RenderClear(m_renderer);
+
         // update module values
         t_top_module->evaluate();
 
