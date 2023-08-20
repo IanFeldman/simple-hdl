@@ -206,12 +206,14 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             m_keyboard->addOutput(key);
         }
         else if (word == PRESENT) {
-            std::string r, g, b, param;
+            std::string x, y, r, g, b, param;
+            file >> x;
+            file >> y;
             file >> r;
             file >> g;
             file >> b;
             file >> param;
-            Color *color = new Color(m_renderer, (char)255, (char)255, (char)255);
+            Color *color = new Color(m_renderer, (char)stoi(x), (char)stoi(y), (char)stoi(r), (char)stoi(g), (char)stoi(b));
             addModule(color);
             // create connection
             Module::Connection connection;

@@ -14,10 +14,11 @@ logic [name] [value]
 module [name] [filename] [input name] [param] [output name] [param] endmodule
 nand [param] [param] [param]
 keyboard [key] [param]
-present [r] [g] [b] [param]
+present [x] [y] [r] [g] [b] [param]
 # this is a comment #
 
 * A, B, C, D... map to keyboard keys
+* max dimensions are 0 to 255
 
 - modules have to be defined after ports/parameters
 + check for module ins/logics->ins, outs/logics->outs 
