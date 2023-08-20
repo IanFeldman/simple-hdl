@@ -1,4 +1,5 @@
 #include <fstream>
+#include "color.hpp"
 #include "simulation.hpp"
 #include "nand.hpp"
 
@@ -14,6 +15,7 @@
 #define NAND "nand"
 #define COMMENT "#"
 #define KEYBOARD "keyboard"
+#define PRESENT "present"
 
 Simulation::Simulation(std::string t_directory) {
     m_directory = t_directory;
@@ -33,6 +35,12 @@ void Simulation::initialize() {
     m_window = SDL_CreateWindow("Simple HDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 300, 300, SDL_WINDOW_RESIZABLE);
     if (m_window == nullptr) {
         std::cout << "Error creating window: " << SDL_GetError() << std::endl;
+        return;
+    }
+    // create renderer
+    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (m_renderer == NULL) {
+        std::cout << "Error creating renderer: " << SDL_GetError() << std::endl;
         return;
     }
     std::cout << "SDL initialized" << std::endl;
@@ -197,6 +205,24 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             // add output to keyboard
             m_keyboard->addOutput(key);
         }
+        else if (word == PRESENT) {
+            std::string r, g, b, param;
+            file >> r;
+            file >> g;
+            file >> b;
+            file >> param;
+            Color *color = new Color(m_renderer, (char)255, (char)255, (char)255);
+            addModule(color);
+            // create connection
+            Module::Connection connection;
+            connection.module = color;
+            // create map
+            std::unordered_map<std::string, std::string> port_map;
+            port_map["A"] = param;
+            connection.port_map = port_map;
+            // add connection
+            module->addConnection(connection);
+        }
         else {
             std::cout << "(" << t_file_name << ") ";
             std::cout << "Error: invalid token '" << word << "'" << std::endl;
@@ -250,12 +276,19 @@ void Simulation::update(Module *t_top_module) {
         // check for quit
         pollQuit(); 
 
+        // clear screen
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);
+        SDL_RenderClear(m_renderer);
+
         // update clock
         if (m_clock) { m_clock = 0; }
         else { m_clock = 1; }
         
         // update module values
         t_top_module->evaluate();
+
+        // draw
+        SDL_RenderPresent(m_renderer);
     }
 }
 

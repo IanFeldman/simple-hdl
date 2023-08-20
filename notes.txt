@@ -14,9 +14,10 @@ logic [name] [value]
 module [name] [filename] [input name] [param] [output name] [param] endmodule
 nand [param] [param] [param]
 keyboard [key] [param]
+present [r] [g] [b] [param]
 # this is a comment #
 
-* KEY_A, KEY_B, KEY_C, ... , KEY_Z map to keyboard keys
+* A, B, C, D... map to keyboard keys
 
 - modules have to be defined after ports/parameters
 + check for module ins/logics->ins, outs/logics->outs 

@@ -33,4 +33,5 @@ private:
     bool m_running;
     int m_clock;
     SDL_Window *m_window;
+    SDL_Renderer *m_renderer;
 };
