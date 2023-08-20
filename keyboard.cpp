@@ -7,6 +7,7 @@
 Keyboard::Keyboard()
     :Module("KEYBOARD", "built-in")
 {
+    m_is_built_in = true;
 }
 
 std::unordered_map<std::string, int> Keyboard::valid_keys = {

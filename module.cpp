@@ -3,6 +3,7 @@
 Module::Module(std::string t_name, std::string t_file_name) {
     m_name = t_name;
     m_file_name = t_file_name;
+    m_is_built_in = false;
 }
 
 void Module::addInput(std::string t_name) {

@@ -6,6 +6,7 @@ Nand::Nand()
     addInput("A");
     addInput("B");
     addOutput("Z");
+    m_is_built_in = true;
 }
 
 void Nand::evaluate() {

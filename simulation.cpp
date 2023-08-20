@@ -260,6 +260,11 @@ std::string Simulation::createFilePath(std::string t_module_name) {
 
 void Simulation::debug() {
     for (Module *m : m_modules) {
+        // don't do built-in modules
+        if (m->isBuiltIn()) {
+            continue;
+        }
+
         std::cout << m->getName() << "(" << m->getFileName() << ")" << std::endl;
 
         std::cout << "  INPUTS" << std::endl;

@@ -13,6 +13,7 @@ Presenter::Presenter(SDL_Renderer* t_renderer, char t_x, char t_y, char t_red, c
     m_width = 20;
 
     addInput("A");
+    m_is_built_in = true;
 }
 
 void Presenter::evaluate() {

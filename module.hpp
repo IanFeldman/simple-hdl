@@ -30,6 +30,7 @@ public:
     std::unordered_map<std::string, int> *getLogics() { return &m_logics; }
     std::vector<Connection> getConnections() { return m_connections; }
     int isTop() { return m_is_top; }
+    int isBuiltIn() { return m_is_built_in; }
 
     // setters
     void setIsTop(bool t_is_top) { m_is_top = t_is_top; }
@@ -43,4 +44,5 @@ protected:
     std::unordered_map<std::string, int> m_inputs, m_outputs, m_logics;
     std::vector<Connection> m_connections;
     bool m_is_top;
+    bool m_is_built_in;
 };
