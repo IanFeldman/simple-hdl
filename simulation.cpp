@@ -5,8 +5,9 @@
 #include "presenter.hpp"
 #include "simulation.hpp"
 
-Simulation::Simulation(std::string t_directory) {
+Simulation::Simulation(std::string t_directory, int t_clock_speed) {
     m_directory = t_directory;
+    m_clock_speed = t_clock_speed;
     m_running = true;
     m_clock = 0;
 }
@@ -300,13 +301,19 @@ void Simulation::debug() {
 }
 
 void Simulation::update(Module *t_top_module) {
+    int prev_time = SDL_GetTicks();
+
     while (m_running) {
         // check for quit
         pollQuit(); 
 
         // update clock
-        if (m_clock) { m_clock = 0; }
-        else { m_clock = 1; }
+        int curr_time = SDL_GetTicks();
+        if (curr_time > prev_time + m_clock_speed) { 
+            if (m_clock) { m_clock = 0; }
+            else { m_clock = 1; }
+            prev_time = curr_time;
+        }
         
         // clear screen
         SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);

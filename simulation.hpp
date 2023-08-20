@@ -8,7 +8,7 @@
 
 class Simulation {
 public:
-    Simulation(std::string t_directory);
+    Simulation(std::string t_directory, int t_clock_speed);
     void initialize();
     Module *parseFile(std::string t_file_name, std::string t_module_name);
     void addModule(Module *t_module) { m_modules.push_back(t_module); }
@@ -27,9 +27,8 @@ public:
 
 
 private:
-    // key: key, value: input name
-    std::unordered_map<std::string, std::string> m_key_input_map;
     std::string m_directory;
+    int m_clock_speed;
     std::vector<Module*> m_modules;
     bool m_running;
     int m_clock;
