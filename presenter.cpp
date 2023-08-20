@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
-#include "color.hpp"
+#include "presenter.hpp"
 
-Color::Color(SDL_Renderer* t_renderer, char t_x, char t_y, char t_red, char t_green, char t_blue)
+Presenter::Presenter(SDL_Renderer* t_renderer, char t_x, char t_y, char t_red, char t_green, char t_blue)
     :Module("COLOR", "built-in")
 {
     m_renderer = t_renderer;
@@ -15,7 +15,7 @@ Color::Color(SDL_Renderer* t_renderer, char t_x, char t_y, char t_red, char t_gr
     addInput("A");
 }
 
-void Color::evaluate() {
+void Presenter::evaluate() {
     // draw color if enabled
     if (m_inputs["A"]) {
         SDL_SetRenderDrawColor(m_renderer, m_red, m_green, m_blue, 255);

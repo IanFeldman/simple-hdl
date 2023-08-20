@@ -2,9 +2,9 @@
 #include <SDL2/SDL.h>
 #include "module.hpp"
 
-class Color : public Module {
+class Presenter : public Module {
 public:
-    Color(SDL_Renderer *t_renderer, char t_x, char t_y, char t_red, char t_green, char t_blue);
+    Presenter(SDL_Renderer *t_renderer, char t_x, char t_y, char t_red, char t_green, char t_blue);
     void evaluate() override;
 
 private:

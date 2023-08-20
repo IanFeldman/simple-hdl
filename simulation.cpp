@@ -1,7 +1,7 @@
 #include <fstream>
-#include "color.hpp"
-#include "simulation.hpp"
 #include "nand.hpp"
+#include "presenter.hpp"
+#include "simulation.hpp"
 
 // syntax
 #define ENTRY "top"
@@ -224,11 +224,11 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             file >> g;
             file >> b;
             file >> param;
-            Color *color = new Color(m_renderer, (char)stoi(x), (char)stoi(y), (char)stoi(r), (char)stoi(g), (char)stoi(b));
-            addModule(color);
+            Presenter *presenter = new Presenter(m_renderer, (char)stoi(x), (char)stoi(y), (char)stoi(r), (char)stoi(g), (char)stoi(b));
+            addModule(presenter);
             // create connection
             Module::Connection connection;
-            connection.module = color;
+            connection.module = presenter;
             // create map
             std::unordered_map<std::string, std::string> port_map;
             port_map["A"] = param;

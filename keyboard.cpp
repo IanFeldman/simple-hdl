@@ -39,13 +39,10 @@ std::unordered_map<std::string, int> Keyboard::valid_keys = {
 };
 
 void Keyboard::evaluate() {
-    std::cout<< "eval keyboard" << std::endl;
-
     // clear outputs
     for (auto& it: m_outputs) {
         m_outputs[it.first] = 0;
     }
-    std::cout<< "inputs cleared" << std::endl;
 
     const Uint8* keyboard_state = SDL_GetKeyboardState(NULL);
     // iterate over outputs
@@ -53,19 +50,4 @@ void Keyboard::evaluate() {
         // it.first = "A", "B", "C", etc
         m_outputs[it.first] = keyboard_state[Keyboard::valid_keys[it.first]];
     }
-
-    // poll for keyboard events
-    /*
-    SDL_Event event;
-    while(SDL_PollEvent(&event)) {
-        switch(event.type){
-            case SDL_KEYDOWN:
-                std::cout<< "keydown" << std::endl;
-                m_outputs[SDL_GetKeyName(event.key.keysym.sym)] = 1;
-                break;
-            default:
-                break;
-        }
-    }
-    */
 }
