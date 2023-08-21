@@ -112,11 +112,12 @@ See `example-modules` for more example modules.
 
 ## TODO
 
--  [ ] check that modules are defined after ports/parameters
--  [x] check for module ins/logics->ins, outs/logics->outs 
+- [ ] check that modules are defined after ports/parameters
+- [x] check for module ins/logics->ins, outs/logics->outs 
 - [ ] disallow repeat names
 - [ ] check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)
 - [x] check for end of comment and endmodule
 - [x] check for cyclic module definition
 - [ ] check if parameters have been created
 - [ ] check for parameter names that have been used but not created (see 1)
+- [ ] do not create window and loop if no keyboard or presenter modules created
