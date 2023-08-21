@@ -1,2 +1,2 @@
 output:
-	g++ *.cpp -I libs/gainput-master/lib/include -L libs/gainput-master/build/lib -l gainput -o build/simple-hdl 
+	g++ *.cpp -std=c++11 -ISDL2/include -LSDL2/lib -lSDL2-2.0.0 -o simple-hdl 

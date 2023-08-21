@@ -207,6 +207,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
         }
         else if (word == PRESENT) {
             std::string param, x, y, r, g, b;
+            // TODO: check for stoi() error
             file >> param;
             file >> x;
             file >> y;
