@@ -120,4 +120,5 @@ See `example-modules` for more example modules.
 - [x] check for cyclic module definition
 - [ ] check if parameters have been created
 - [ ] check for parameter names that have been used but not created (see 1)
-- [ ] do not create window and loop if no keyboard or presenter modules created
+- [x] do not create window or loop if no keyboard, presenter or clock modules created
+- [ ] handle stoi() errors

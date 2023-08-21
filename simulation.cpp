@@ -10,6 +10,7 @@ Simulation::Simulation(std::string t_directory, int t_clock_speed) {
     m_clock_speed = t_clock_speed;
     m_running = true;
     m_clock = 0;
+    m_is_io = false;
 }
 
 void Simulation::initialize() {
@@ -30,13 +31,17 @@ void Simulation::initialize() {
         std::cout << "Error creating renderer: " << SDL_GetError() << std::endl;
         return;
     }
-    std::cout << "SDL initialized" << std::endl;
 
     // parse modules
     Module *top_module = parseFile(createFilePath(ENTRY), TOP_MOD_NAME);
     if (top_module) {
         // begin loop
-        update(top_module);
+        if (m_is_io) {
+            update(top_module);
+        }
+        else {
+            std::cout << "No keyboard, presenter, or clock modules used" << std::endl;
+        }
         // debug at the end
         debug();
     }
@@ -204,6 +209,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             keyboard_connection.port_map[key] = connected_port; 
             // add output to keyboard
             keyboard->addOutput(key);
+            m_is_io = true;
         }
         else if (word == PRESENT) {
             std::string param, x, y, r, g, b;
@@ -225,6 +231,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             connection.port_map = port_map;
             // add connection
             module->addConnection(connection);
+            m_is_io = true;
         }
         else if (word == CLOCK) {
             std::string param;
@@ -241,6 +248,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             connection.port_map = port_map;
             // add connection
             module->addConnection(connection);
+            m_is_io = true;
         }
         else {
             std::cout << "(" << t_file_name << ") ";
