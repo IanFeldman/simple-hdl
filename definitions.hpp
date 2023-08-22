@@ -1,7 +1,6 @@
 #define TOP_MOD_NAME "top"
 #define ENTRY "top"
 #define EXT ".module"
-// #define KEY "KEY_"
 #define INPUT "input"
 #define OUTPUT "output" 
 #define LOGIC "logic"
@@ -12,3 +11,4 @@
 #define KEYBOARD "keyboard"
 #define PRESENT "present"
 #define CLOCK "clock"
+#define ASSIGN "assign"

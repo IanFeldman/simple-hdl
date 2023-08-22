@@ -1,4 +1,5 @@
 #include <fstream>
+#include "assign.hpp"
 #include "clock.hpp"
 #include "definitions.hpp"
 #include "nand.hpp"
@@ -279,6 +280,20 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             // add connection
             module->addConnection(connection);
             m_is_io = true;
+        }
+        else if (word == ASSIGN) {
+            Assign *assign = new Assign();
+            addModule(assign);
+            // create connection
+            Module::Connection connection;
+            connection.module = assign;
+            // create map
+            std::unordered_map<std::string, std::string> port_map;
+            file >> port_map["A"]; 
+            file >> port_map["Z"];
+            connection.port_map = port_map;
+            // add connection
+            module->addConnection(connection);
         }
         else {
             std::cout << "(" << t_file_name << ") ";

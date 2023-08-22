@@ -78,6 +78,12 @@ output module_output
 nand module_input logic_one module_output
 ```
 
+##### Assign
+```
+assign [param A] [param Z]
+```
+This copies the value of `[param A]` to `[param Z]`. Note that `[param A]` cannot be an output variable and `[param Z]` cannot be an input variable;
+
 ##### Clock
 ```
 clock [param]
@@ -95,7 +101,7 @@ where `[key]` can be any letter A-Z and `[param]` is the name of an output or lo
 ##### Present
 This module does not modify parameters, but can be used to see the their valuesin real-time:
 ```
-present [param] [x] [y] [r] [g] [b]`
+present [param] [x] [y] [r] [g] [b]
 ```
 This draws a square to the screen at (`[x]`, `[y]`) with the color specified when `[param]` is set. Coordinates and color values range from 0 to 255 inclusive.
 
@@ -131,5 +137,5 @@ The application window can be resized and moved. Close with the red x in the cor
 - [x] do not create window or loop if no keyboard, presenter or clock modules created
 - [x] handle stoi() errors
 - [x] option to toggle keyboard input
-- [ ] assign module (copies value from one parameter to another)
+- [x] assign module (copies value from one parameter to another)
 - [ ] print line where error occurs
