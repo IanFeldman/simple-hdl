@@ -129,7 +129,7 @@ The application window can be resized and moved. Close with the red x in the cor
 - [x] check for end of comment and endmodule
 - [x] check for cyclic module definition
 - [x] do not create window or loop if no keyboard, presenter or clock modules created
-- [ ] handle stoi() errors
+- [x] handle stoi() errors
 - [x] option to toggle keyboard input
 - [ ] assign module (copies value from one parameter to another)
 - [ ] print line where error occurs

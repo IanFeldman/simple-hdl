@@ -51,7 +51,7 @@ void Simulation::initialize() {
         }
     }
     else {
-        std::cout << "Error: Failed to parse top.module" << std::endl;
+        std::cout << "Aborting due to failure to parse modules" << std::endl;
     }
     shutdown();
 }
@@ -229,15 +229,28 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             m_is_io = true;
         }
         else if (word == PRESENT) {
-            std::string param, x, y, r, g, b;
-            // TODO: check for stoi() error
+            std::string param, s_x, s_y, s_r, s_g, s_b;
+            int x, y, r, g, b;
             file >> param;
-            file >> x;
-            file >> y;
-            file >> r;
-            file >> g;
-            file >> b;
-            Presenter *presenter = new Presenter(m_renderer, (char)stoi(x), (char)stoi(y), (char)stoi(r), (char)stoi(g), (char)stoi(b));
+            file >> s_x;
+            file >> s_y;
+            file >> s_r;
+            file >> s_g;
+            file >> s_b;
+            try {
+                x = stoi(s_x);
+                y = stoi(s_y);
+                r = stoi(s_r);
+                g = stoi(s_g);
+                b = stoi(s_b);
+            }
+            catch(std::invalid_argument) {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: Present coordinates and color values must be integers [0, 255]" << std::endl;
+                file.close();
+                return nullptr;
+            }
+            Presenter *presenter = new Presenter(m_renderer, (char)x, (char)y, (char)r, (char)g, (char)b);
             addModule(presenter);
             // create connection
             Module::Connection connection;
