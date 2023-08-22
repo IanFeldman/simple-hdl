@@ -1,0 +1,12 @@
+input A
+input B
+input C
+logic sum1   0
+logic carry1 0
+logic carry2 0
+output SUM
+output CARRY
+
+module ha1 half-adder A A B B    SUM sum1 CARRY carry1 endmodule
+module ha2 half-adder A C B sum1 SUM SUM  CARRY carry2 endmodule
+module or or A carry1 B carry2 Z CARRY endmodule

@@ -1,5 +1,3 @@
-# not = nand with one #
-input not_in
-logic logic_one 1
-output not_out
-nand not_in logic_one not_out
+input A
+output Z
+nand A A Z

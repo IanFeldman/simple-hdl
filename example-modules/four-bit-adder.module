@@ -1,0 +1,26 @@
+# A0 is least sig bit #
+input A0
+input A1
+input A2
+input A3
+
+input B0
+input B1
+input B2
+input B3
+
+logic c0 0
+logic c1 0
+logic c2 0
+logic c3 0
+
+output Z0
+output Z1
+output Z2
+output Z3
+output CARRY
+
+module fa full-adder A A0 B B0 C c0 SUM Z0 CARRY c1 endmodule
+module fa full-adder A A1 B B1 C c1 SUM Z1 CARRY c2 endmodule
+module fa full-adder A A2 B B2 C c2 SUM Z2 CARRY c3 endmodule
+module fa full-adder A A3 B B3 C c3 SUM Z3 CARRY CARRY endmodule

@@ -1,13 +1,46 @@
-logic clk 0
-logic g_key 0
-logic h_key 0
-logic result 0
-keyboard G g_key
-keyboard H h_key
+module bg background endmodule
 
-clock clk
+logic A0 0
+logic A1 0
+logic A2 0
+logic A3 0
 
-module my_and_module and and_input_1 g_key and_input_2 h_key and_output result endmodule
+logic B0 0
+logic B1 0
+logic B2 0
+logic B3 0
 
-present clk 0 0 255 255 255
-present result 2 0 0 0 255
+logic Z0 0
+logic Z1 0
+logic Z2 0
+logic Z3 0
+logic C 0
+
+# connect keyboard #
+keyboard L A0 1
+keyboard K A1 1
+keyboard J A2 1
+keyboard H A3 1
+
+keyboard F B0 1
+keyboard D B1 1
+keyboard S B2 1
+keyboard A B3 1
+
+module fba four-bit-adder A0 A0 A1 A1 A2 A2 A3 A3 B0 B0 B1 B1 B2 B2 B3 B3 Z0 Z0 Z1 Z1 Z2 Z2 Z3 Z3 CARRY C endmodule
+
+present A0 5 0 255 0 0
+present A1 4 0 255 0 0
+present A2 3 0 255 0 0
+present A3 2 0 255 0 0
+
+present B0 5 1 255 255 0
+present B1 4 1 255 255 0
+present B2 3 1 255 255 0
+present B3 2 1 255 255 0
+
+present Z0 5 3 0 255 0
+present Z1 4 3 0 255 0
+present Z2 3 3 0 255 0
+present Z3 2 3 0 255 0
+present C  0 3 0 255 0

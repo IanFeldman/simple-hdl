@@ -1,0 +1,11 @@
+input A
+input B
+logic t1 0
+logic t2 0
+logic t3 0
+output Z
+
+nand A  B  t1
+nand A  t1 t2
+nand B  t1 t3
+nand t2 t3 Z 

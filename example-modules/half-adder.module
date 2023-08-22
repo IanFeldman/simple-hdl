@@ -1,0 +1,6 @@
+input A
+input B
+output SUM
+output CARRY
+module ha-xor xor A A B B Z SUM endmodule
+module ha-and and A A B B Z CARRY endmodule
