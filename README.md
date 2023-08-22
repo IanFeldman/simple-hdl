@@ -120,18 +120,16 @@ See `example-modules` for more example modules.
 ### Window
 The application window can be resized and moved. Close with the red x in the corner or hit `esc`. The window will not be created if no keyboard, presenter, or clock modules are created. The program always prints out debug information at the end detailing what modules were used, how they were connected, and the final values of their parameters.
 
-## Dev TODO
+## TODO
 
 - [x] check that parameters used were defined 
 - [x] check for module ins/logics->ins, outs/logics->outs 
-- [ ] disallow repeat names
-- [ ] check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)
+- [x] disallow repeat names in a single module -> allowed but undefined behavior
+- [x] check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)
 - [x] check for end of comment and endmodule
 - [x] check for cyclic module definition
-- [ ] check if parameters have been created
-- [ ] check for parameter names that have been used but not created (see 1)
 - [x] do not create window or loop if no keyboard, presenter or clock modules created
 - [ ] handle stoi() errors
 - [x] option to toggle keyboard input
 - [ ] assign module (copies value from one parameter to another)
-- [ ] print error line
+- [ ] print line where error occurs
