@@ -50,11 +50,8 @@ void Keyboard::evaluate() {
         int scancode = Keyboard::valid_keys[key];
         int key_pressed = keyboard_state[scancode];
 
-        // check if it is not toggle-enabled
-        if (m_toggle_enabled.find(key) == m_toggle_enabled.end()) {
-            m_outputs[key] = key_pressed;
-        }
-        else {
+        // check if it is toggle-enabled
+        if (m_toggle_enabled.count(key)) {
             // reenable toggling if key is up
             if (!m_toggle_enabled[key] && !key_pressed) {
                 m_toggle_enabled[key] = true;
@@ -63,6 +60,9 @@ void Keyboard::evaluate() {
                 m_outputs[key] = !m_outputs[key];
                 m_toggle_enabled[key] = false; // disallowing toggling until key is released
             }
+        }
+        else {
+            m_outputs[key] = key_pressed;
         }
     }
 }

@@ -144,6 +144,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             Module *new_module = parseFile(file_path, module_name);
             // check if module was created correctly
             if (!new_module) {
+                // no need to debug here
                 file.close();
                 return nullptr;
             }
@@ -201,7 +202,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             std::string key, connected_port, toggle_enabled;
             file >> key;
             // check if it is a valid key
-            if (Keyboard::valid_keys.find(key) == Keyboard::valid_keys.end()) {
+            if (Keyboard::valid_keys.count(key) == 0) {
                 std::cout << "(" << t_file_name << ") ";
                 std::cout << "Error: invalid keyboard key '" << key << "'" << std::endl;
                 file.close();
