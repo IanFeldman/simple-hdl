@@ -86,9 +86,11 @@ clock [param]
 
 ##### Keyboard
 ```
-keyboard [key] [param]
+keyboard [key] [param] [toggle]
 ```
-where `[key]` can be any letter A-Z and `[param]` is the name of an output or logic variable which will be set if and only if that key is currently pressed.
+where `[key]` can be any letter A-Z and `[param]` is the name of an output or logic variable which will be set if and only if that key is currently pressed.  `[toggle]` is a binary value that indicates whether the parameter will be toggle-enabled or not. When `[toggle]` is 0, the associated parameter will enable only while the key is held down and disable once it is let up. When it is 1, the associated parameter will become enabled once the key is pressed and stay enabled until the key is pressed again. 
+
+*Note*: the keyboard can only be used in top.module
 
 ##### Present
 This module does not modify parameters, but can be used to see the their valuesin real-time:
@@ -130,3 +132,6 @@ The application window can be resized and moved. Close with the red x in the cor
 - [ ] check for parameter names that have been used but not created (see 1)
 - [x] do not create window or loop if no keyboard, presenter or clock modules created
 - [ ] handle stoi() errors
+- [x] option to toggle keyboard input
+- [ ] assign module (copies value from one parameter to another)
+- [ ] print error line

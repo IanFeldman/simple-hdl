@@ -40,15 +40,29 @@ std::unordered_map<std::string, int> Keyboard::valid_keys = {
 };
 
 void Keyboard::evaluate() {
-    // clear outputs
-    for (auto& it: m_outputs) {
-        m_outputs[it.first] = 0;
-    }
-
+    // get keyboard state
     const Uint8* keyboard_state = SDL_GetKeyboardState(NULL);
+
     // iterate over outputs
     for (auto& it : m_outputs) {
         // it.first = "A", "B", "C", etc
-        m_outputs[it.first] = keyboard_state[Keyboard::valid_keys[it.first]];
+        std::string key = it.first;
+        int scancode = Keyboard::valid_keys[key];
+        int key_pressed = keyboard_state[scancode];
+
+        // check if it is not toggle-enabled
+        if (m_toggle_enabled.find(key) == m_toggle_enabled.end()) {
+            m_outputs[key] = key_pressed;
+        }
+        else {
+            // reenable toggling if key is up
+            if (!m_toggle_enabled[key] && !key_pressed) {
+                m_toggle_enabled[key] = true;
+            }
+            else if (m_toggle_enabled[key] && key_pressed) {
+                m_outputs[key] = !m_outputs[key];
+                m_toggle_enabled[key] = false; // disallowing toggling until key is released
+            }
+        }
     }
 }

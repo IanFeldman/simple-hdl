@@ -196,7 +196,7 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
                 keyboard_connection.module = keyboard;
                 created_keyboard = true;
             }
-            std::string key, connected_port;
+            std::string key, connected_port, toggle_enabled;
             file >> key;
             // check if it is a valid key
             if (Keyboard::valid_keys.find(key) == Keyboard::valid_keys.end()) {
@@ -209,6 +209,17 @@ Module *Simulation::parseFile(std::string t_file_name, std::string t_module_name
             keyboard_connection.port_map[key] = connected_port; 
             // add output to keyboard
             keyboard->addOutput(key);
+            // check if toggle enabled
+            file >> toggle_enabled;
+            if (toggle_enabled == "1") {
+                keyboard->toggleEnable(key);
+            }
+            else if (toggle_enabled != "0") {
+                std::cout << "(" << t_file_name << ") ";
+                std::cout << "Error: missing toggle-enable bit" << std::endl;
+                file.close();
+                return nullptr;
+            }
             m_is_io = true;
         }
         else if (word == PRESENT) {
