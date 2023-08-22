@@ -37,7 +37,8 @@ public:
 
     // calculates output value(s)
     // overridden by nand, keyboard
-    virtual void evaluate();
+    // return 0 on success, -1 on failure
+    virtual int evaluate();
 
 protected:
     std::string m_name, m_file_name;

@@ -5,7 +5,7 @@
 class Clock : public Module {
 public:
     Clock(Simulation *t_sim);
-    void evaluate() override;
+    int evaluate() override;
 
 private:
     Simulation *m_sim;

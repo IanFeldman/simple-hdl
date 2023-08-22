@@ -9,6 +9,7 @@ Clock::Clock(Simulation *t_sim)
     m_is_built_in = true;
 }
 
-void Clock::evaluate() {
+int Clock::evaluate() {
     m_outputs["Z"] = m_sim->getClock();
+    return 0;
 }

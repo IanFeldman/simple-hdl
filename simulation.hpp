@@ -22,7 +22,8 @@ public:
     int getClock() { return m_clock; }
 
     // frame update
-    void update(Module *t_top_module);
+    // return 0 on success, -1 on failure
+    int update(Module *t_top_module);
     void shutdown();
 
 

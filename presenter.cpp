@@ -16,7 +16,7 @@ Presenter::Presenter(SDL_Renderer* t_renderer, char t_x, char t_y, char t_red, c
     m_is_built_in = true;
 }
 
-void Presenter::evaluate() {
+int Presenter::evaluate() {
     // draw color if enabled
     if (m_inputs["A"]) {
         SDL_SetRenderDrawColor(m_renderer, m_red, m_green, m_blue, 255);
@@ -26,4 +26,5 @@ void Presenter::evaluate() {
             }
         }
     }
+    return 0;
 }

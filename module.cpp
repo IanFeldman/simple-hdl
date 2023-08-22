@@ -22,7 +22,7 @@ void Module::addConnection(Connection t_connection) {
     m_connections.push_back(t_connection);
 }
 
-void Module::evaluate() {
+int Module::evaluate() {
     // iterate over connections
     for (Connection c : m_connections) {
         std::unordered_map<std::string, int> *submodule_inputs = c.module->getInputs();
@@ -46,20 +46,22 @@ void Module::evaluate() {
                 std::cout << "(" << m_file_name << ") ";
                 std::cout << "Error evaluating module '" << c.module->getName() << "': ";
                 std::cout << "cannot connect supermodule output to submodule input" << std::endl;
-                return;
+                return -1;
             }
             else {
                 std::cout << "(" << m_file_name << ") ";
                 std::cout << "Error evaluating module '" << c.module->getName() << "': ";
-                std::cout << "unconnected submodule input" << std::endl;
-                return;
+                std::cout << "unconnected submodule input '" << submodule_input << "'" << std::endl;
+                return -1;
             }
             // set submodule input value
             (*submodule_inputs)[submodule_input] = super_value;
         }
 
         // evaluate submodule outputs
-        c.module->evaluate();
+        if (c.module->evaluate()) {
+            return -1;
+        }
 
         // iterate over outputs and update supermodule
         for (auto& it: *submodule_outputs) {
@@ -78,14 +80,15 @@ void Module::evaluate() {
                 std::cout << "(" << m_file_name << ") ";
                 std::cout << "Error evaluating module '" << c.module->getName() << "': ";
                 std::cout << "cannot connect submodule output to supermodule input" << std::endl;
-                return;
+                return -1;
             }
             else {
                 std::cout << "(" << m_file_name << ") ";
                 std::cout << "Error evaluating module '" << c.module->getName() << "': ";
-                std::cout << "unconnected submodule output" << std::endl;
-                return;
+                std::cout << "unconnected submodule output '" << submodule_output << "'" << std::endl;
+                return -1;
             }
         }
     }
+    return 0;
 }

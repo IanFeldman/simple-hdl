@@ -39,7 +39,7 @@ std::unordered_map<std::string, int> Keyboard::valid_keys = {
     { "Z", SDL_SCANCODE_Z }
 };
 
-void Keyboard::evaluate() {
+int Keyboard::evaluate() {
     // get keyboard state
     const Uint8* keyboard_state = SDL_GetKeyboardState(NULL);
 
@@ -65,4 +65,5 @@ void Keyboard::evaluate() {
             m_outputs[key] = key_pressed;
         }
     }
+    return 0;
 }

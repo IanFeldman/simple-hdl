@@ -4,5 +4,5 @@
 class Nand : public Module {
 public:
     Nand();
-    void evaluate() override;
+    int evaluate() override;
 };

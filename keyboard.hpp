@@ -6,7 +6,7 @@
 class Keyboard : public Module {
 public:
     Keyboard();
-    void evaluate() override;
+    int evaluate() override;
     static std::unordered_map<std::string, int> valid_keys;
     void toggleEnable(std::string t_key) { m_toggle_enabled[t_key] = true; }
 

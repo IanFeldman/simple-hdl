@@ -35,17 +35,20 @@ void Simulation::initialize() {
     // parse modules
     Module *top_module = parseFile(createFilePath(ENTRY), TOP_MOD_NAME);
     if (top_module) {
+        int status = 0;
         // begin loop
         if (m_is_io) {
-            update(top_module);
+            status = update(top_module);
         }
         else {
             std::cout << "No keyboard, presenter, or clock modules used" << std::endl;
             // evaluate once
-            top_module->evaluate();
+            status = top_module->evaluate();
         }
-        // debug at the end
-        debug();
+        // debug at the end if all successful
+        if (!status) {
+            debug();
+        }
     }
     else {
         std::cout << "Error: Failed to parse top.module" << std::endl;
@@ -323,7 +326,7 @@ void Simulation::debug() {
     }
 }
 
-void Simulation::update(Module *t_top_module) {
+int Simulation::update(Module *t_top_module) {
     int prev_time = SDL_GetTicks();
 
     while (m_running) {
@@ -343,11 +346,15 @@ void Simulation::update(Module *t_top_module) {
         SDL_RenderClear(m_renderer);
 
         // update module values
-        t_top_module->evaluate();
+        if (t_top_module->evaluate()) {
+            m_running = false;
+            return -1;
+        }
 
         // draw
         SDL_RenderPresent(m_renderer);
     }
+    return 0;
 }
 
 void Simulation::pollQuit() {

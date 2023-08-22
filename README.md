@@ -122,7 +122,7 @@ The application window can be resized and moved. Close with the red x in the cor
 
 ## Dev TODO
 
-- [ ] check that parameters used were defined 
+- [x] check that parameters used were defined 
 - [x] check for module ins/logics->ins, outs/logics->outs 
 - [ ] disallow repeat names
 - [ ] check that all inputs and outputs in module instantiation are satisfied (cannot have unconnected ports)

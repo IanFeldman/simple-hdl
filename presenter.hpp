@@ -5,7 +5,7 @@
 class Presenter : public Module {
 public:
     Presenter(SDL_Renderer *t_renderer, char t_x, char t_y, char t_red, char t_green, char t_blue);
-    void evaluate() override;
+    int evaluate() override;
 
 private:
     SDL_Renderer *m_renderer;
