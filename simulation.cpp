@@ -41,6 +41,8 @@ void Simulation::initialize() {
         }
         else {
             std::cout << "No keyboard, presenter, or clock modules used" << std::endl;
+            // evaluate once
+            top_module->evaluate();
         }
         // debug at the end
         debug();
